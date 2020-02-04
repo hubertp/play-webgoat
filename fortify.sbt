@@ -1,5 +1,5 @@
 // this makes it so sbt can resolve the plugin
-credentials += Credentials(
+/*credentials += Credentials(
   Path.userHome / ".lightbend" / "commercial.credentials")
 resolvers += "lightbend-commercial-releases" at
   "https://repo.lightbend.com/commercial-releases/"
@@ -14,3 +14,4 @@ scalacOptions ++= Seq(
   "-P:fortify:scaversion=19.1",
   "-P:fortify:build=play-webgoat"
 )
+*/

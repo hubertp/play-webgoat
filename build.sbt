@@ -20,3 +20,30 @@ scalacOptions ++=
 
 libraryDependencies += guice
 libraryDependencies += ws
+
+// Big standalone jar configuration (not officially supported by Play)
+
+assembly/mainClass := Some("play.core.server.ProdServerStart")
+assembly/fullClasspath += Attributed.blank(PlayKeys.playPackageAssets.value)
+
+assembly/assemblyMergeStrategy := {
+  case PathList("javax", "persistence", xs @ _*)     => MergeStrategy.last
+  case PathList("javax", "transaction", xs @ _*)     => MergeStrategy.last
+  case PathList("org", "apache", "commons", "logging", xs @ _*)     => MergeStrategy.last
+  case PathList(ps @ _*) if ps.last endsWith ".html" => MergeStrategy.first
+  case PathList(ps @ _*) if ps.last endsWith ".sql"  => MergeStrategy.first
+  case "application.conf"                            => MergeStrategy.concat
+  case "unwanted.txt"                                => MergeStrategy.discard
+  case "play/reference-overrides.conf"               => MergeStrategy.first
+  case x if x.startsWith("javax") => MergeStrategy.first
+  case x =>
+    val oldStrategy = (assembly/assemblyMergeStrategy).value
+    oldStrategy(x)
+}
+
+artifact in (Compile, assembly) := {
+  val art = (artifact in (Compile, assembly)).value
+  art.withClassifier(Some("assembly"))
+}
+
+addArtifact(artifact in (Compile, assembly), assembly)
