@@ -7,6 +7,7 @@ GET        /                                             controllers.HomeControl
 
 
 GET        /attackerQuery                                controllers.HomeController.attackerQuery
+GET        /attackerQueryTmp                             controllers.HomeController.attackerQueryTmp
 GET        /attackerQuerySimple                          controllers.HomeController.attackerQuerySimple
 GET        /attackerQueryPatternMatching                 controllers.HomeController.attackerQueryPatternMatching
 GET        /attackerRouteControlledQuery                 controllers.HomeController.attackerRouteControlledQuery(attacker)
@@ -14,6 +15,8 @@ GET        /attackerRouteControlledPath/:attacker        controllers.HomeControl
 
 # These are a little harder to trigger because you have to push a cookie in the request
 GET        /attackerCookie                               controllers.HomeController.attackerCookie
+GET        /attackerCookieTmp                            controllers.HomeController.attackerCookieTmp
+GET        /attackerCookieTmpGet                         controllers.HomeController.attackerCookieTmpGet
 GET        /attackerFlash                                controllers.HomeController.attackerFlash
 
 # Push an additional header in the request for the attack

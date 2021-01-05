@@ -18,15 +18,15 @@ scalacOptions ++=
       Seq("-Xlint")
   })
 
-libraryDependencies += guice
+//libraryDependencies += guice
 libraryDependencies += ws
 
 // Big standalone jar configuration (not officially supported by Play)
 
-assembly/mainClass := Some("play.core.server.ProdServerStart")
-assembly/fullClasspath += Attributed.blank(PlayKeys.playPackageAssets.value)
+mainClass in assembly := Some("play.core.server.ProdServerStart")
+fullClasspath in assembly += Attributed.blank(PlayKeys.playPackageAssets.value)
 
-assembly/assemblyMergeStrategy := {
+assemblyMergeStrategy in assembly := {
   case PathList("javax", "persistence", xs @ _*)     => MergeStrategy.last
   case PathList("javax", "transaction", xs @ _*)     => MergeStrategy.last
   case PathList("org", "apache", "commons", "logging", xs @ _*)     => MergeStrategy.last
@@ -37,7 +37,7 @@ assembly/assemblyMergeStrategy := {
   case "play/reference-overrides.conf"               => MergeStrategy.first
   case x if x.startsWith("javax") => MergeStrategy.first
   case x =>
-    val oldStrategy = (assembly/assemblyMergeStrategy).value
+    val oldStrategy = (assemblyMergeStrategy in assembly).value
     oldStrategy(x)
 }
 

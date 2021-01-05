@@ -41,6 +41,7 @@ class HomeController @Inject()(ws: WSClient, cc: MessagesControllerComponents)(i
   /**
    * Command injection & XSS directly from directly called query parameter
    */
+  //def attackerQuerySimple = {( request: Request)  =>
   def attackerQuerySimple = Action { implicit request  =>
     val address = request.getQueryString("address")
 
@@ -52,6 +53,12 @@ class HomeController @Inject()(ws: WSClient, cc: MessagesControllerComponents)(i
     // [RuleTest] Cross-Site Scripting: Reflected
     Ok(html) as HTML
   }
+
+  /*def useAttacherk = {
+    val lambda = attackerQuerySimple
+
+    lambda(request)
+  }*/
 
   /**
    * Command injection & XSS directly from directly called query parameter
@@ -78,8 +85,18 @@ class HomeController @Inject()(ws: WSClient, cc: MessagesControllerComponents)(i
       // Render the command directly from query parameter, this is the obvious example
       // User thinks this is system controlled and validated, so turns it into HTML
       // and unescapes it, resulting in XSS.
-      Ok(Html(command))
-    }.getOrElse(Ok(""))
+      val meh = Ok(Html(command))
+      meh
+    }
+    .get//.getOrElse(Ok(""))
+
+    result// as HTML
+  }
+
+  def attackerQueryTmp = Action { implicit request  =>
+
+    val command = request.getQueryString("attacker").get
+    val result = Ok(Html(command))
 
     result as HTML
   }
@@ -105,8 +122,34 @@ class HomeController @Inject()(ws: WSClient, cc: MessagesControllerComponents)(i
     // User cookies have no message authentication by default, so an attacker can pass in a cookie
     val result = request.cookies.get("attacker").map { attackerCookie =>
       // Render the command
+      Html(attackerCookie.value)
+    }.getOrElse(Html(""))
+
+    Ok(result) as HTML
+  }
+
+  /**
+    * XSS through attacker controlled info in cookie
+    */
+  def attackerCookieTmp = Action { implicit request =>
+    // User cookies have no message authentication by default, so an attacker can pass in a cookie
+    val result = request.cookies.get("attacker").map { attackerCookie =>
+      // Render the command
       Ok(Html(attackerCookie.value))
     }.getOrElse(Ok(""))
+
+    result as HTML
+  }
+
+  /**
+    * XSS through attacker controlled info in cookie
+    */
+  def attackerCookieTmpGet = Action { implicit request =>
+    // User cookies have no message authentication by default, so an attacker can pass in a cookie
+    val result = request.cookies.get("attacker").map { attackerCookie =>
+      // Render the command
+      Ok(Html(attackerCookie.value))
+    }.get
 
     result as HTML
   }
